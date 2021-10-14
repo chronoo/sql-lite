@@ -1,18 +1,27 @@
 package com.example.sqllite
 
+import org.h2.tools.Server
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Repository
 import org.springframework.web.bind.annotation.*
+import java.sql.SQLException
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 
+
 @SpringBootApplication
-class SqlLiteApplication
+class SqlLiteApplication {
+    @Bean(initMethod = "start", destroyMethod = "stop")
+    @Throws(SQLException::class)
+    fun h2Server() =
+        Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9090")
+}
 
 fun main(args: Array<String>) {
     runApplication<SqlLiteApplication>(*args)
